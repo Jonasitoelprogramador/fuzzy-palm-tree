@@ -1,0 +1,7 @@
+.hoverable {
+    cursor: pointer; /* To change the cursor to a hand pointer */
+}
+
+.hoverable:hover {
+    font-weight: bold;
+}
