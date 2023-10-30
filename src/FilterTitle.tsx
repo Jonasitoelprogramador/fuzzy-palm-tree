@@ -1,5 +1,6 @@
 import styles from "./GameDisplay.module.css"
 import { HandleClickType } from './types';
+import { Genre } from "./Genres";
 
 
 import { 
@@ -18,13 +19,13 @@ interface Props {
     handleOrderClick: HandleClickType;
     platform: string;
     order: string;
-    genre: string;
+    genre: Genre | null;
 }
 
 const FilterTitle = ({handlePlatformClick, handleOrderClick, platform, order, genre }: Props) => {
   return (
     <>
-        <Heading as="h1">{platform} {genre} Games</Heading>
+        <Heading as="h1">{platform} {genre ? genre.name : null} Games</Heading>
         <Flex gap={3} paddingTop='30px' paddingBottom='30px'>
             <Menu>
                 <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>

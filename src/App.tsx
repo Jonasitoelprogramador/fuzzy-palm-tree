@@ -3,29 +3,53 @@ import Search from "./Search";
 import LightToggle from "./LightToggle";
 import Logo from "./Logo";
 import  {FormData} from './Search';
+import { Genre } from "./Genres";
 
 import { HandleClickType } from './types';
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FilterTitle from "./FilterTitle";
 import Genres from "./Genres";
 import GameDisplay from "./GameDisplay";
 import Testing from "./Testing";
 
+import {getDataFromAPI} from "./services"
+
+
 
 function MyGrid() {
   const defaultPlatform = ""
   const defaultOrder = "Relevance"
-  const defaultGenre = ""
+  const defaultGenre = null
   const defaultInput = ""
 
   const [platform, setPlatform] = useState<string>(defaultPlatform);
   const [order, setOrder] = useState<string>(defaultOrder);
-  const [genre, setGenre] = useState<string>(defaultGenre);
+  const [genre, setGenre] = useState<Genre|null>(defaultGenre);
   const [formInput, setformInput] = useState<string>(defaultInput);
   const [skeleton, setSkeleton] = useState(true);
+  const [selectedGenre, setSelectedGenre] = useState<Genre|null>(null);
+  const [genres, setGenres] = useState<Genre[]>([]);
 
-  console.log('general render skeleton '+skeleton)
+  useEffect(() => {
+
+    const transformGenres = (data: any): Genre[] => 
+      data.map((point: Genre) => ({
+          id: point.id,
+          image_background: point.image_background,
+          name: point.name,
+          slug: point.slug
+      }));
+
+    const fetchGenres = async () => {
+        const genres = await getDataFromAPI<Genre>('https://api.rawg.io/api/genres', transformGenres);
+        // do something with genres
+        setGenres(genres)
+    }
+
+    fetchGenres(); // Notice the function invocation here
+}, []);
+
 
   const { colorMode } = useColorMode();
 
@@ -40,10 +64,18 @@ function MyGrid() {
   }
 
   const handleGenreClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    const genre: string | null = event.currentTarget.getAttribute('data-name');
-    genre ? setGenre(genre) : console.log('Input to setGenre is null')
-    setSkeleton(true)
-  }
+    const genreId = event.currentTarget.getAttribute('data-id');
+    const genre = genres.find(g => g.id === Number(genreId));
+
+    if (genre) {
+        setGenre(genre);
+        setSelectedGenre(genre);
+        setSkeleton(true);
+    } else {
+        console.log('Genre not found');
+    }
+}
+
 
   const handleInput = (formInput: FormData) => {
     setformInput(formInput.search)
@@ -76,7 +108,7 @@ function MyGrid() {
       </GridItem>
       <Show above="lg">
         <GridItem gridArea="aside">
-          <Genres genre={genre} handleGenreClick={handleGenreClick}></Genres>
+          <Genres genres={genres} selectedGenre={selectedGenre} handleGenreClick={handleGenreClick}></Genres>
         </GridItem>
       </Show>
       <GridItem gridArea="main">

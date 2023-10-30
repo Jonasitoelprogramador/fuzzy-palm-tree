@@ -17,13 +17,7 @@ import Skeleton, {SkeletonTheme} from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 
 import  {FormData} from './Search';
-
-
-interface Genre {
-    id?: number;
-    name?: string;
-    slug?: string;
-}
+import { Genre } from "./Genres";
 
 interface PlatformDetails {
     platform: {
@@ -53,8 +47,8 @@ interface Props {
     defaultPlatform: string;
     order: string;
     defaultOrder: string;
-    genre: string;
-    defaultGenre: string;
+    genre: Genre | null;
+    defaultGenre: Genre | null;
     formInput: string;
     setSkeleton: (value: boolean) => void;
     skeleton: boolean;
@@ -204,9 +198,10 @@ const Testing = ({ platform, order, defaultPlatform, defaultGenre, genre, setSke
 
     useEffect(() => {
         //const platformPara = platform ?
+        console.log('this is the genre', genre)
         let url = 'https://api.rawg.io/api/games?'
         platform !== defaultPlatform ? url+= `parent_platforms=${platform.toLowerCase()}&` : url
-        genre !== defaultGenre ? url+= `genres=${genre.toLowerCase()}&` : url
+        genre !== defaultGenre ? url+= `genres=${genre?.slug}&` : url
         order !== defaultOrder ? url+= `ordering=${order.toLowerCase()}&` : url
         formInput !== defaultInput ? url+= `search=${order.toLowerCase()}&` : url
         
@@ -214,12 +209,12 @@ const Testing = ({ platform, order, defaultPlatform, defaultGenre, genre, setSke
             url = url.slice(0, -1);
         }
         
-        console.log(url)
+        console.log('url', url)
 
         axios
         .get(url, {
             params: {
-            key: 'df4b6861d0794b25b02189c5ae2d9611',
+            key: import.meta.env.VITE_API_KEY,
             },
         })
         .then((res) => {
