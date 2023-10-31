@@ -7,7 +7,7 @@ export const getDataFromAPI = async <T>(
     try {
         const response = await axios.get(endpoint, {
             params: {
-                key: 'df4b6861d0794b25b02189c5ae2d9611',
+                key: import.meta.env.VITE_API_KEY,
             },
         });
         

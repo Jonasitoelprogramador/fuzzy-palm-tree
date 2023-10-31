@@ -18,6 +18,8 @@ import 'react-loading-skeleton/dist/skeleton.css'
 
 import  {FormData} from './Search';
 import { Genre } from "./Genres";
+import {getDataFromAPI} from "./services"
+import { Order, Platform } from "./App";
 
 interface PlatformDetails {
     platform: {
@@ -32,6 +34,7 @@ interface Game {
   platformicons: IconDefinition[];
   background_image: string;
   metacritic: number;
+  slug: string;
 }
 
 interface Result {
@@ -40,13 +43,13 @@ interface Result {
     platforms: PlatformDetails[];
     background_image: string;
     metacritic: number;
+    slug: string;
 }
 
 interface Props {
-    platform: string;
-    defaultPlatform: string;
-    order: string;
-    defaultOrder: string;
+    platform: Platform | null;
+    order: Order;
+    defaultOrder: Order;
     genre: Genre | null;
     defaultGenre: Genre | null;
     formInput: string;
@@ -55,7 +58,7 @@ interface Props {
     defaultInput: string;
 }
 
-const Testing = ({ platform, order, defaultPlatform, defaultGenre, genre, setSkeleton, skeleton, defaultOrder, formInput, defaultInput }: Props) => {
+const Testing = ({ platform, order, defaultGenre, genre, setSkeleton, skeleton, defaultOrder, formInput, defaultInput }: Props) => {
   const { colorMode } = useColorMode();
   const theme = useTheme();
   const [games, setGames] = useState<Game[]>([]);
@@ -158,7 +161,7 @@ const Testing = ({ platform, order, defaultPlatform, defaultGenre, genre, setSke
         return [...new Set(Icons)];
         }
 
-    const cleanStrings = (listy: string[]) => {
+    /*const cleanStrings = (listy: string[]) => {
         const cleanedPlatforms = listy.map(platform => {
             if (platform.toLowerCase().includes('playstation')) {
                 return 'playstation'
@@ -184,7 +187,7 @@ const Testing = ({ platform, order, defaultPlatform, defaultGenre, genre, setSke
         }
         );
         return [... new Set(cleanedPlatforms)];
-        }
+        }*/
 
   //idea that this takes in the array of platformDetails and turns it into an array of strings
     const getPlatforms = (platformdetails: PlatformDetails[]) => {
@@ -196,7 +199,7 @@ const Testing = ({ platform, order, defaultPlatform, defaultGenre, genre, setSke
         return stringArray
     };
 
-    useEffect(() => {
+    /*useEffect(() => {
         //const platformPara = platform ?
         console.log('this is the genre', genre)
         let url = 'https://api.rawg.io/api/games?'
@@ -236,7 +239,47 @@ const Testing = ({ platform, order, defaultPlatform, defaultGenre, genre, setSke
 
     useEffect(() => {
         console.log('effect hook skeleton ' + skeleton);
-    }, [skeleton]);
+    }, [skeleton]);*/
+
+    
+    useEffect(() => {
+        console.log('currently games ' + games);
+    }, [games]);
+    
+    useEffect(() => {
+        //const platformPara = platform ?
+        let url = 'https://api.rawg.io/api/games?'
+        platform ? url+= `parent_platforms=${platform.id}&` : url
+        genre !== defaultGenre ? url+= `genres=${genre?.slug}&` : url
+        order ? url+= `ordering=${order.slug}&` : url
+        formInput !== defaultInput ? url+= `search=${formInput}&` : url
+        
+        if (url.endsWith('&')) {
+            url = url.slice(0, -1);
+        }
+
+        console.log('urly whurly', url)
+
+        const transformGames = (data: any): Game[] => 
+          data.map((point: Result) => ({
+            id: point.id,
+            name: point.name,
+            platformicons: platformsToIcons((getPlatforms(point.platforms))),
+            background_image: point.background_image,
+            metacritic: point.metacritic,
+            slug: point.slug
+          }));
+    
+        const fetchGames = async () => {
+            const games = await getDataFromAPI<Game>(url, transformGames);
+            // do something with genres
+            setGames(games)
+            setSkeleton(false);
+        }
+    
+        fetchGames(); // Notice the function invocation here
+    }, [order, genre, platform, formInput]);
+    
 
     const skeletons = Array.from({ length: 20 }).map((_, index) => (
         <GridItem className={styles.gameCard}>
@@ -265,7 +308,6 @@ const Testing = ({ platform, order, defaultPlatform, defaultGenre, genre, setSke
         marginRight="10px"
         >
             {(() => {
-            console.log('skeleton before if clause '+skeleton)
             if (games.length > 0 && skeleton === false  ) {
                 return games.map((game: Game) => (
                         (<GridItem className={styles.gameCard} key={game.id} bg={colorMode === 'dark' ? theme.colors.brand[100] : 'white'}>
