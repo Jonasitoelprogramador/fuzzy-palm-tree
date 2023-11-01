@@ -22,6 +22,7 @@ interface Props {
 }
 
 const Genres = ({ handleGenreClick, genres, selectedGenre }: Props) => {
+    console.log('genres debugging', genres)
     return (
         <>
             <Heading as="h1" marginLeft="20px">Genres</Heading>

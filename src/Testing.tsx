@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWindows, faPlaystation, faXbox, faLinux, faApple, faAndroid, IconDefinition } from '@fortawesome/free-brands-svg-icons';
-import { faN  } from '@fortawesome/free-solid-svg-icons';
+import { faN, faEllipsis  } from '@fortawesome/free-solid-svg-icons';
 
 import Skeleton, {SkeletonTheme} from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
@@ -134,32 +134,40 @@ const Testing = ({ platform, order, defaultGenre, genre, setSkeleton, skeleton, 
   const searcedGames = searchGames(formInput, genreFiltered)*/
   
   const platformsToIcons = (listy: string[]) => {
-        const Icons = listy.map(platform => {
-            if (platform.toLowerCase().includes('playstation')) {
-                return faPlaystation
-            } else if (platform.toLowerCase().includes('xbox')) {
-                // block of code to be executed if the condition1 is false and condition2 is true
-                return faXbox
-            } else if (platform.toLowerCase().includes('pc')) {
-                // block of code to be executed if the condition1 is false and condition2 is true
-                return faWindows
-            } else if (platform.toLowerCase().includes('nintendo')) {
-                // block of code to be executed if the condition1 is false and condition2 is true
-                return faN
-            } else if (platform.toLowerCase().includes('linux')) {
-                // block of code to be executed if the condition1 is false and condition2 is true
-                return faLinux
-            } else if (platform.toLowerCase().includes('macos')) {
-                // block of code to be executed if the condition1 is false and condition2 is true
-                return faApple
-            } else if (platform.toLowerCase().includes('android')) {
-                // block of code to be executed if the condition1 is false and condition2 is true
-                return faAndroid
-            }        
+    const Icons = listy.map(platform => {
+        if (platform.toLowerCase().includes('playstation')) {
+            return faPlaystation;
+        } else if (platform.toLowerCase().includes('xbox')) {
+            return faXbox;
+        } else if (platform.toLowerCase().includes('pc')) {
+            return faWindows;
+        } else if (platform.toLowerCase().includes('nintendo')) {
+            return faN;
+        } else if (platform.toLowerCase().includes('linux')) {
+            return faLinux;
+        } else if (platform.toLowerCase().includes('macos')) {
+            return faApple;
+        } else if (platform.toLowerCase().includes('android')) {
+            return faAndroid;
+        } else {
+            return faEllipsis;
         }
-        );
-        return [...new Set(Icons)];
-        }
+    });
+
+    // Filter out all ellipsis icons
+    const filteredIcons = Icons.filter(icon => icon !== faEllipsis);
+    
+    // Create a set of the filtered icons
+    const uniqueIcons = [...new Set(filteredIcons)];
+
+    // If there was an ellipsis icon in the original array, append it to the end of the unique icons array
+    if (Icons.includes(faEllipsis)) {
+        uniqueIcons.push(faEllipsis);
+    }
+
+    return uniqueIcons;
+}
+
 
     /*const cleanStrings = (listy: string[]) => {
         const cleanedPlatforms = listy.map(platform => {
@@ -247,12 +255,13 @@ const Testing = ({ platform, order, defaultGenre, genre, setSkeleton, skeleton, 
     }, [games]);
     
     useEffect(() => {
+        console.log('calling useEffect')
         //const platformPara = platform ?
         let url = 'https://api.rawg.io/api/games?'
         platform ? url+= `parent_platforms=${platform.id}&` : url
-        genre !== defaultGenre ? url+= `genres=${genre?.slug}&` : url
-        order ? url+= `ordering=${order.slug}&` : url
-        formInput !== defaultInput ? url+= `search=${formInput}&` : url
+        genre ? url+= `genres=${genre?.slug}&` : url
+        order !== defaultOrder ? url+= `ordering=${order.slug}&` : url
+        formInput !== defaultInput ? url+= `search=${encodeURIComponent(formInput)}&` : url
         
         if (url.endsWith('&')) {
             url = url.slice(0, -1);
@@ -260,15 +269,17 @@ const Testing = ({ platform, order, defaultGenre, genre, setSkeleton, skeleton, 
 
         console.log('urly whurly', url)
 
-        const transformGames = (data: any): Game[] => 
-          data.map((point: Result) => ({
-            id: point.id,
-            name: point.name,
-            platformicons: platformsToIcons((getPlatforms(point.platforms))),
-            background_image: point.background_image,
-            metacritic: point.metacritic,
-            slug: point.slug
-          }));
+        const transformGames = (data: any): Game[] => {
+            console.log('this is data', data);
+            return data.map((point: Result) => ({
+              id: point.id,
+              name: point.name,
+              platformicons: platformsToIcons(getPlatforms(point.platforms)),
+              background_image: point.background_image,
+              metacritic: point.metacritic,
+              slug: point.slug
+            }));
+          };
     
         const fetchGames = async () => {
             const games = await getDataFromAPI<Game>(url, transformGames);
@@ -282,9 +293,9 @@ const Testing = ({ platform, order, defaultGenre, genre, setSkeleton, skeleton, 
     
 
     const skeletons = Array.from({ length: 20 }).map((_, index) => (
-        <GridItem className={styles.gameCard}>
+        <GridItem className={styles.gameCard} key={index}>
             <Skeleton height='145.5px' />
-            <Box padding='10px' bg="#202020">
+            <Box padding='10px' background={colorMode === 'dark' ? '#202020' : '#ebf3f3'}>
                 <Skeleton count={1} height={30} />
                 <Skeleton count={1} height={60} />
             </Box>
@@ -311,28 +322,29 @@ const Testing = ({ platform, order, defaultGenre, genre, setSkeleton, skeleton, 
             if (games.length > 0 && skeleton === false  ) {
                 return games.map((game: Game) => (
                         (<GridItem className={styles.gameCard} key={game.id} bg={colorMode === 'dark' ? theme.colors.brand[100] : 'white'}>
-                        <Box h="150px" bgImage={`url(${game.background_image})`} bgSize="100% 100%" bgRepeat="no-repeat"></Box>
-                        <Flex gap='2' style={{ margin: '8px', fontSize: '20px', paddingTop: '10px', paddingLeft: '10px', paddingRight: '10px' }}>
-                            {game.platformicons.map((item: IconDefinition | undefined) => {
-                            if (!item) {
-                                console.error("Undefined icon encountered");
-                                return null;  // Or return some default/fallback component
-                            }
-                            return (
-                                <>
-                                    <FontAwesomeIcon icon={item} style={{ marginTop: 'auto', marginBottom: 'auto', color:'grey' }}></FontAwesomeIcon>
-                                </>
-                                );
-                            })}
-                            <span style={{ marginLeft: 'auto', paddingLeft: '8px', paddingRight: '8px', borderRadius: '10%', backgroundColor: theme.colors.rating_green[100], fontWeight: 'bold'  }}>{game.metacritic}</span>
-                        </Flex>
-                        <Box fontSize='25px' fontFamily='Arial' style={{ fontWeight: 800 }} paddingLeft='10px' paddingBottom='10px' paddingRight='10px'>{game.name}</Box>
-                        </GridItem>)
+                            <Box bgImage={`url(${game.background_image})`} bgSize="100% 100%" bgRepeat="no-repeat" minHeight="150px"></Box>
+                            <Flex gap='2' style={{ margin: '8px', fontSize: '20px', paddingTop: '10px', paddingLeft: '10px', paddingRight: '10px' }}>
+                                {game.platformicons.map((item: IconDefinition | undefined, index) => {
+                                    if (!item) {
+                                        console.error("Undefined icon encountered");
+                                        return null;  // Or return some default/fallback component
+                                    }
+                                    return (
+                                        <>
+                                            <FontAwesomeIcon key={index} icon={item} style={{ marginTop: 'auto', marginBottom: 'auto', color:'grey' }}></FontAwesomeIcon>
+                                        </>
+                                    );
+                                })}
+                                <span style={{ marginLeft: 'auto', paddingLeft: '8px', paddingRight: '8px', borderRadius: '10%', backgroundColor: theme.colors.rating_green[100], fontWeight: 'bold'  }}>{game.metacritic ? game.metacritic : 'N/A'}</span>
+                            </Flex>
+                            <Box fontSize='25px' fontFamily='Arial' style={{ fontWeight: 800, whiteSpace: 'normal', overflowWrap: 'break-word' }} paddingLeft='10px' paddingBottom='10px' paddingRight='10px'>{game.name}</Box>
+                        </GridItem>
+                    )
                 ));
             } else {
                 return (
                     (
-                        <SkeletonTheme baseColor="#202020" highlightColor="#444">
+                        <SkeletonTheme highlightColor="#444" baseColor={colorMode === 'dark' ? '#202020' : '#edf2f7'}>
                             {skeletons}
                         </SkeletonTheme>
                     )

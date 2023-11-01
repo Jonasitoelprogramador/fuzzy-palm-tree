@@ -101,6 +101,7 @@ function MyGrid() {
 
     if (matchedOrder) {
         setOrder(matchedOrder)
+        setSkeleton(true);
     } else {
         console.log('Order not found');
     }
@@ -113,7 +114,7 @@ function MyGrid() {
     if (matchedGenre) {
         setGenre(matchedGenre);
         setSelectedGenre(matchedGenre);
-        setSkeleton(true);
+        genre !== matchedGenre && setSkeleton(true);
     } else {
         console.log('Genre not found');
     }
@@ -127,7 +128,7 @@ function MyGrid() {
   return (
     <Grid 
     height={
-      "100vh"
+      "100%"
     } 
     templateAreas={{
       base: `"nav" "main"`,

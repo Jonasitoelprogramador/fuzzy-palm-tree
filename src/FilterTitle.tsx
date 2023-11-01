@@ -12,7 +12,9 @@ import {
     Menu,
     MenuButton,
     MenuItem,
-    MenuList} from '@chakra-ui/react';
+    MenuList,
+    useColorMode
+} from '@chakra-ui/react';
 
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
@@ -27,7 +29,7 @@ interface Props {
 }
 
 const FilterTitle = ({handlePlatformClick, handleOrderClick, platform, platforms, order, ordering, genre }: Props) => {
-    console.log('platforms', platforms)
+    const { colorMode } = useColorMode();
     return (
     <>
         <Heading as="h1">{platform?.name} {genre ? genre.name : null} Games</Heading>
@@ -36,9 +38,17 @@ const FilterTitle = ({handlePlatformClick, handleOrderClick, platform, platforms
                 <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
                     {platform ? platform.name : "Platforms"}
                 </MenuButton>
-                <MenuList>
+                <MenuList bg={colorMode === 'dark' ? 'black' : 'white'}>
                     {platforms.map((platform: Platform) => (
-                        <MenuItem onClick={handlePlatformClick} data-id={platform.id}>{platform.name}</MenuItem>
+                        <MenuItem 
+                            key={platform.id}
+                            onClick={handlePlatformClick} 
+                            data-id={platform.id}
+                            _hover={{ bg: colorMode === 'dark' ? 'gray.600' : 'gray.200' }}
+                            bg={colorMode === 'dark' ? 'black' : 'white'}
+                        >
+                            {platform.name}
+                        </MenuItem>
                     ))}  
                 </MenuList>
             </Menu>
@@ -46,13 +56,22 @@ const FilterTitle = ({handlePlatformClick, handleOrderClick, platform, platforms
                 <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
                     Order by: {order.name}
                 </MenuButton>
-                <MenuList>
+                <MenuList bg={colorMode === 'dark' ? 'black' : 'white'}>
                     {ordering.map((order: Order) => (
-                        <MenuItem onClick={handleOrderClick} data-id={order.id}>{order.name}</MenuItem>
+                        <MenuItem
+                            key={order.id} 
+                            onClick={handleOrderClick} 
+                            data-id={order.id}
+                            _hover={{ bg: colorMode === 'dark' ? 'gray.600' : 'gray.200' }}
+                            bg={colorMode === 'dark' ? 'black' : 'white'}
+                        >
+                            {order.name}
+                        </MenuItem>
                     ))}    
                 </MenuList>
             </Menu>
         </Flex>
+
     </>
   )
 }
