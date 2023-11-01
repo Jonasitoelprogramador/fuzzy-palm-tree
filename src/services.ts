@@ -10,9 +10,6 @@ export const getDataFromAPI = async <T>(
                 key: import.meta.env.VITE_API_KEY,
             },
         });
-        
-        console.log("API Response:", response.data.results);
-
         const transformedData = transformFn(response.data.results);
         
         return transformedData;

@@ -1,9 +1,4 @@
-import styles from "./GameDisplay.module.css"
 import { HandleClickType } from './types';
-import { Genre } from "./Genres";
-import { Platform } from "./App";
-import { Order } from "./App";
-
 
 import { 
     Flex,
@@ -15,8 +10,9 @@ import {
     MenuList,
     useColorMode
 } from '@chakra-ui/react';
-
 import { ChevronDownIcon } from "@chakra-ui/icons";
+
+import { Genre, Platform, Order } from "./interfaces";
 
 interface Props {
     handlePlatformClick: HandleClickType;

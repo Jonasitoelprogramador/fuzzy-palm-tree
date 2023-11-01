@@ -1,6 +1,3 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-
 import styles from "./Genres.module.css"
 
 import { 
@@ -8,12 +5,7 @@ import {
     Heading,
     Box} from '@chakra-ui/react';
 
-interface Genre {
-    id: number;
-    image_background: string;
-    name: string;
-    slug: string;
-}
+import { Genre } from "./interfaces";
 
 interface Props {
     handleGenreClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
@@ -22,7 +14,6 @@ interface Props {
 }
 
 const Genres = ({ handleGenreClick, genres, selectedGenre }: Props) => {
-    console.log('genres debugging', genres)
     return (
         <>
             <Heading as="h1" marginLeft="20px">Genres</Heading>

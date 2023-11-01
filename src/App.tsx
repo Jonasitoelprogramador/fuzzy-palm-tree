@@ -1,31 +1,20 @@
 import { Grid, Show, GridItem, Flex, useColorMode } from "@chakra-ui/react";
-import Search from "./Search";
+
 import LightToggle from "./LightToggle";
 import Logo from "./Logo";
-import  {FormData} from './Search';
-import { Genre } from "./Genres";
 
 import { HandleClickType } from './types';
 
 import { useEffect, useState } from "react";
+
 import FilterTitle from "./FilterTitle";
 import Genres from "./Genres";
 import GameDisplay from "./GameDisplay";
-import Testing from "./Testing";
+import Search from "./Search";
 
 import {getDataFromAPI} from "./services"
 
-interface Platform {
-  name: string;
-  slug: string;
-  id: number;
-}
-
-interface Order {
-  name: string;
-  slug: string;
-  id: number;
-}
+import { Platform, Order, FormData, Genre } from "./interfaces";
 
 function MyGrid() {
   const defaultPlatform = null
@@ -157,8 +146,7 @@ function MyGrid() {
       </Show>
       <GridItem gridArea="main">
         <FilterTitle genre={genre} handlePlatformClick={handlePlatformClick} handleOrderClick={handleOrderClick} platform={platform} platforms={platforms} order={order} ordering={orderingDropDown}></FilterTitle>
-        <Testing defaultInput={defaultInput} defaultGenre={defaultGenre} defaultOrder={defaultOrder} platform={platform} order={order} genre={genre} formInput={formInput} setSkeleton={setSkeleton} skeleton={skeleton}></Testing>
-        <GameDisplay></GameDisplay>
+        <GameDisplay defaultInput={defaultInput} defaultGenre={defaultGenre} defaultOrder={defaultOrder} platform={platform} order={order} genre={genre} formInput={formInput} setSkeleton={setSkeleton} skeleton={skeleton}></GameDisplay>
       </GridItem>
     </Grid>
   );

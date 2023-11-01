@@ -1,16 +1,10 @@
 import { useForm } from "react-hook-form";
+import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Search2Icon } from '@chakra-ui/icons'
 import { Input, InputGroup, InputLeftElement } from '@chakra-ui/react'
 
-import z from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod'
-
-const schema = z.object({
-    search: z.string()
-});
-
-export type FormData = z.infer<typeof schema>;
+import { FormData, schema } from "./interfaces";
 
 interface Props {
     handleInput: (data: FormData) => void;
