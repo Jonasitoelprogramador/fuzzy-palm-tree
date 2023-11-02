@@ -8,7 +8,8 @@ import {
     MenuButton,
     MenuItem,
     MenuList,
-    useColorMode
+    useColorMode,
+    Box
 } from '@chakra-ui/react';
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
@@ -27,7 +28,7 @@ interface Props {
 const FilterTitle = ({handlePlatformClick, handleOrderClick, platform, platforms, order, ordering, genre }: Props) => {
     const { colorMode } = useColorMode();
     return (
-    <>
+    <Box marginLeft='10px'>
         <Heading as="h1">{platform?.name} {genre ? genre.name : null} Games</Heading>
         <Flex gap={3} paddingTop='30px' paddingBottom='30px'>
             <Menu>
@@ -68,7 +69,7 @@ const FilterTitle = ({handlePlatformClick, handleOrderClick, platform, platforms
             </Menu>
         </Flex>
 
-    </>
+    </Box>
   )
 }
 

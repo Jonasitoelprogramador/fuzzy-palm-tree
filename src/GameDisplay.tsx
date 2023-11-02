@@ -130,13 +130,20 @@ const Testing = ({ platform, order, defaultGenre, genre, setSkeleton, skeleton, 
         <Grid
         minH="100vh"
         templateColumns={{
-            base: 'repeat(3, 1fr)',    
+            base: 'repeat(1, 1fr)',
+            sm: 'repeat(2, 1fr)',   // for small screens
+            md: 'repeat(3, 1fr)',    
             xl: 'repeat(4, 1fr)',
             '2xl': 'repeat(5, 1fr)'
         }}
         templateRows="repeat(auto-fill, 290px)"
         gap={6}
-        marginRight="10px"
+        marginRight={{
+            base: "50px",
+            sm: "10px"}}
+        marginLeft={{
+            base: "50px",
+            sm: "10px"}}
         >
             {(() => {
             if (games.length > 0 && skeleton === false  ) {
