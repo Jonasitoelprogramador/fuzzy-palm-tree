@@ -1,11 +1,11 @@
-import styles from "./Genres.module.css"
+import styles from "../css_modules/Genres.module.css"
 
 import { 
     Flex,
     Heading,
     Box} from '@chakra-ui/react';
 
-import { Genre } from "./interfaces";
+import { Genre } from "../interfaces";
 
 interface Props {
     handleGenreClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;

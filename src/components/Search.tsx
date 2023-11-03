@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Search2Icon } from '@chakra-ui/icons'
 import { Input, InputGroup, InputLeftElement } from '@chakra-ui/react'
 
-import { FormData, schema } from "./interfaces";
+import { FormData, schema } from "../interfaces";
 
 interface Props {
     handleInput: (data: FormData) => void;

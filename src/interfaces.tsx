@@ -50,3 +50,8 @@ export interface Genre {
     name: string;
     slug: string;
 }
+
+export const defaultPlatform = null
+export const defaultOrder = {name: 'Relevance', slug: '', id: 0}
+export const defaultGenre = null
+export const defaultInput = ""

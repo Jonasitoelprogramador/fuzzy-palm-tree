@@ -15,7 +15,7 @@ const colors = {
 
 // Your color mode config
 const config: ThemeConfig = {
-  initialColorMode: 'light',
+  initialColorMode: 'dark',
 };
 
 // Define your global styles

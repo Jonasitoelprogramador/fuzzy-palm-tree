@@ -3,7 +3,7 @@ import { Grid, Show, GridItem, Flex, useColorMode } from "@chakra-ui/react";
 import LightToggle from "./LightToggle";
 import Logo from "./Logo";
 
-import { HandleClickType } from './types';
+import { HandleClickType } from '../types';
 
 import { useEffect, useState } from "react";
 
@@ -12,15 +12,11 @@ import Genres from "./Genres";
 import GameDisplay from "./GameDisplay";
 import Search from "./Search";
 
-import {getDataFromAPI} from "./services"
+import {getDataFromAPI} from "../services"
 
-import { Platform, Order, FormData, Genre } from "./interfaces";
+import { Platform, Order, FormData, Genre, defaultGenre, defaultInput, defaultOrder, defaultPlatform } from "../interfaces";
 
 function MyGrid() {
-  const defaultPlatform = null
-  const defaultOrder = {name: 'Relevance', slug: '', id: 0}
-  const defaultGenre = null
-  const defaultInput = ""
 
   const [platform, setPlatform] = useState<Platform|null>(defaultPlatform);
   const [platforms, setPlatforms] = useState<Platform[]>([]);

@@ -1,4 +1,4 @@
-import { HandleClickType } from './types';
+import { HandleClickType } from '../types';
 
 import { 
     Flex,
@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
-import { Genre, Platform, Order } from "./interfaces";
+import { Genre, Platform, Order } from "../interfaces";
 
 interface Props {
     handlePlatformClick: HandleClickType;
