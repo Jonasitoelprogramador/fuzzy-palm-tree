@@ -15,7 +15,7 @@ import Skeleton, {SkeletonTheme} from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 
 import { Game, Order, Platform, Genre } from "../interfaces";
-import {getGames} from "../hooks/useGames"
+import {useGames} from "../hooks/useGames"
 
 interface Props {
     platform: Platform | null;
@@ -29,10 +29,10 @@ interface Props {
     defaultInput: string;
 }
 
-const Testing = ({ platform, order, genre, setSkeleton, defaultOrder, formInput, defaultInput }: Props) => {
+const Testing = ({ platform, order, genre, formInput }: Props) => {
   const { colorMode } = useColorMode();
   const theme = useTheme();
-  const {games, skeleton} = getGames(order, genre, formInput, platform);
+  const {games, skeleton} = useGames(order, genre, formInput, platform);
     
 
   const skeletons = Array.from({ length: 20 }).map((_, index) => (

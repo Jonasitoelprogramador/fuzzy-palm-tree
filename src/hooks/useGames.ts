@@ -9,9 +9,10 @@ import {getDataFromAPI} from "../services"
 
 import { Platform, Order, Genre, defaultInput, defaultOrder, Result, Game, PlatformDetails } from "../interfaces";
 
-export const getGames = (order: Order, genre: Genre|null, formInput: string, platform: Platform|null) => {
+export const useGames = (order: Order, genre: Genre|null, formInput: string, platform: Platform|null) => {
     const [games, setGames] = useState<Game[]>([]);
     const [skeleton, setSkeleton] = useState(true);
+    
     const platformsToIcons = (listy: string[]) => {
         const Icons = listy.map(platform => {
             if (platform.toLowerCase().includes('playstation')) {
