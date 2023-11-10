@@ -69,9 +69,6 @@ function MyGrid() {
   const handleInput = (formInput: FormData) => {
     setformInput(formInput.search)
   } 
-
-  
-
   return (
     <Grid 
     height={
